@@ -59,10 +59,27 @@ module.exports = function (RED) {
             return false;
         }
 
+        function getKey(payload, keyproperty) {
+	    	var properties = keyproperty.split('.')
+			var i
+			obj = payload
+
+			for (i=0; i < properties.length; i += 1){
+				if (obj.hasOwnProperty(properties[i]){
+					obj = obj[properties[i]]
+				} else {
+					// throw an error
+					console.log(`msg.payload does not contain property ${keyproperty}`
+				}
+			}
+
+			return obj
+        }
+
         this.on('input', function (msg) {
 
 
-            var key = node.keyproperty ? msg.payload[node.keyproperty] : msg.payload;
+            var key = node.keyproperty ? getKey(msg.payload, node.keyproperty) : msg.payload;
             var topic = (msg.topic || "default_topic")
 			var expiry_lifetime = (isNaN(parseInt(node.expiry)) ? null : parseInt(node.expiry))  || (isNaN(parseInt(msg[node.expiry])) ? null : parseInt(msg[node.expiry])) || 5
 
