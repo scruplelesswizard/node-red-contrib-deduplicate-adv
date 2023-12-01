@@ -46,10 +46,10 @@ module.exports = function (RED) {
             for (i = 0; i < known_entries.length; i += 1) {
                 if (known_entries[i].key === key) {
                     if (!expired(known_entries[i])) {							
-						if (config.expirypolicy=='extend') {
-							known_entries[i].expiry=new Date().getTime() + expiry_lifetime * 1000;
-							node.storage.set(node.registry+'["'+topic+'"]',known_entries)							
-						}
+                        if (config.expirypolicy=='extend') {
+                                known_entries[i].expiry=new Date().getTime() + expiry_lifetime * 1000;
+                                node.storage.set(node.registry+'["'+topic+'"]',known_entries)							
+                        }
                         return true;
                     }
                     known_entries.splice(i, 1);
@@ -60,20 +60,20 @@ module.exports = function (RED) {
         }
 
         function getKey(payload, keyproperty) {
-	    	var properties = keyproperty.split('.')
-			var i
-			obj = payload
-
-			for (i=0; i < properties.length; i += 1){
-				if (obj.hasOwnProperty(properties[i]){
-					obj = obj[properties[i]]
-				} else {
-					// throw an error
-					console.log(`msg.payload does not contain property ${keyproperty}`
-				}
-			}
-
-			return obj
+                const properties = keyproperty.split('.');
+                let i;
+                let obj = payload;
+                
+                for (i = 0; i < properties.length; i += 1) {
+                        if (obj.hasOwnProperty(properties[i])) {
+                                obj = obj[properties[i]];
+                        } else {
+                        // key property doesn't exist, throw an error
+                        t        hrow new Error(`msg.payload does not contain payload key ${keyproperty}`);
+                        }
+                }
+                
+                return obj;
         }
 
         this.on('input', function (msg) {
